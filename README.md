@@ -37,7 +37,9 @@ ticketwave-monolith/
  │   ├── util/          # QrCodeGenerator, PriceCalculator
  │   └── modules/       # Frontera modular (package-info, preparación para microservicios)
  ├── src/main/resources/  # application.yml, application-local.yml, messages.properties
- └── src/test/
+ ├── src/test/
+ ├── Dockerfile           # Build multi-etapa (maven → JRE)
+ └── .dockerignore
 ```
 
 ## Ejecución
@@ -70,6 +72,35 @@ Propiedades configurables:
 Swagger UI: http://localhost:8081/swagger-ui/index.html
 API docs (JSON): http://localhost:8081/v3/api-docs
 Actuator health: http://localhost:8081/actuator/health
+
+## Docker
+
+El `Dockerfile` usa un build multi-etapa: compila con `maven:3.9-eclipse-temurin-21` (descarga dependencias en caché) y produce una imagen JRE ligera con `eclipse-temurin:21-jre`. El contenedor expone el puerto `8081` y usa el perfil activo por defecto (`local` → PostgreSQL).
+
+```bash
+# Construir la imagen
+docker build -t ticketwave-monolith .
+
+# Ejecutar
+docker run -p 8081:8081 ticketwave-monolith
+```
+
+La app requiere PostgreSQL y Redis, por lo que se recomienda levantar ambos con Docker Compose y apuntar las variables de entorno al host del contenedor:
+
+```bash
+docker run -p 8081:8081 \
+  -e DB_URL=jdbc:postgresql://host.docker.internal:5432/ticketwave \
+  -e DB_USERNAME=postgres \
+  -e DB_PASSWORD=postgres \
+  -e REDIS_HOST=host.docker.internal \
+  -e REDIS_PORT=6379 \
+  -e JWT_SECRET=<secreto-de-32-bytes> \
+  ticketwave-monolith
+```
+
+> En Docker Desktop para Windows/Mac, `host.docker.internal` resuelve al host local. En Linux nativo usa `--add-host=host.docker.internal:host-gateway` o la IP del host.
+
+Si tu PostgreSQL y Redis ya corren en el host y accedes a la app desde el navegador, publica el puerto (`-p 8081:8081`) y ajusta `DB_URL`/`REDIS_HOST` según la red del contenedor.
 
 ## Credenciales de demostración (seed automático)
 
