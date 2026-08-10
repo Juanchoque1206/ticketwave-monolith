@@ -109,7 +109,7 @@ Actuator health: http://localhost:8081/actuator/health
 
 ### Testing the endpoints with Swagger UI
 
-1. Quick access to the Test Events endpoint: <a href="http://localhost:8081/swagger-ui/index.html#/Test%20Events/list" target="_blank" rel="noopener noreferrer">open Test Events list in Swagger UI</a>.
+1. Quick access to the Test Events endpoint: [open Test Events list in Swagger UI](http://localhost:8081/swagger-ui/index.html#/Test%20Events/list).
 2. Public endpoints (`/api/events/**`, `/api/users/login`, `/api/users/register`) can be tested directly.
 3. For authenticated or admin endpoints:
    - Call `POST /api/users/login` with `{"username": "admin", "password": "admin1234"}` (or `user`/`user1234`).
