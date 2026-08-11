@@ -103,13 +103,13 @@ Configurable properties:
 - `ticketwave.order-ttl-minutes` — TTL of a `PENDING` reservation (default `15`)
 - `ticketwave.order-expiry-cron` — cron for the order expiration job (default `*/30 * * * * *`, every 30 s)
 
-Swagger UI: http://localhost:8081/swagger-ui/index.html
-API docs (JSON): http://localhost:8081/v3/api-docs
-Actuator health: http://localhost:8081/actuator/health
+Swagger UI: http://localhost:8071/swagger-ui/index.html
+API docs (JSON): http://localhost:8071/v3/api-docs
+Actuator health: http://localhost:8071/actuator/health
 
 ### Testing the endpoints with Swagger UI
 
-1. Quick access to the Test Events endpoint: [open Test Events list in Swagger UI](http://localhost:8081/swagger-ui/index.html#/Test%20Events/list).
+1. Quick access to the Test Events endpoint: [open Test Events list in Swagger UI](http://localhost:8071/swagger-ui/index.html#/Test%20Events/list).
 2. Public endpoints (`/api/events/**`, `/api/users/login`, `/api/users/register`) can be tested directly.
 3. For authenticated or admin endpoints:
    - Call `POST /api/users/login` with `{"username": "admin", "password": "admin1234"}` (or `user`/`user1234`).
@@ -119,20 +119,20 @@ Actuator health: http://localhost:8081/actuator/health
 
 ## Docker
 
-The `Dockerfile` uses a multi-stage build: it compiles with `maven:3.9-eclipse-temurin-21` (caches dependency downloads) and produces a lightweight JRE image with `eclipse-temurin:21-jre`. The container exposes port `8081` and uses the default active profile (`local` → PostgreSQL).
+The `Dockerfile` uses a multi-stage build: it compiles with `maven:3.9-eclipse-temurin-21` (caches dependency downloads) and produces a lightweight JRE image with `eclipse-temurin:21-jre`. The container exposes port `8071` and uses the default active profile (`local` → PostgreSQL).
 
 ```bash
 # Build the image
 docker build -t ticketwave-monolith .
 
 # Run
-docker run -p 8081:8081 ticketwave-monolith
+docker run -p 8071:8071 ticketwave-monolith
 ```
 
 The app requires PostgreSQL and Redis, so it is recommended to spin up both and point the environment variables to the container host:
 
 ```bash
-docker run -p 8081:8081 \
+docker run -p 8071:8071 \
   -e DB_URL=jdbc:postgresql://host.docker.internal:5432/ticketwave \
   -e DB_USERNAME=postgres \
   -e DB_PASSWORD=postgres \
@@ -144,7 +144,7 @@ docker run -p 8081:8081 \
 
 > On Docker Desktop for Windows/Mac, `host.docker.internal` resolves to the local host. On native Linux use `--add-host=host.docker.internal:host-gateway` or the host IP.
 
-If your PostgreSQL and Redis already run on the host and you access the app from the browser, publish the port (`-p 8081:8081`) and adjust `DB_URL`/`REDIS_HOST` according to the container network.
+If your PostgreSQL and Redis already run on the host and you access the app from the browser, publish the port (`-p 8071:8071`) and adjust `DB_URL`/`REDIS_HOST` according to the container network.
 
 ## Demo credentials (auto seed)
 
